@@ -1,37 +1,58 @@
 # amaniagent / skills
 
-Security-auditing skills for AI coding agents (Claude Code, Cursor, Codex, …).
-Both score on the **same 0–8 danger scale** — evidence-anchored, fair, non-alarmist:
-they score *capability*, and name the likely *intent* separately.
+Security & tooling skills for AI coding agents (Claude Code, Cursor, Codex, …),
+organized by category. Each skill is one folder with a `SKILL.md`.
 
-| Skill | Audits | Install |
-|-------|--------|---------|
-| [**skill-auditor**](skill-auditor/) | a single agent skill / plugin / MCP before you trust it | `npx skilladd amaniagent/skills/skill-auditor` |
-| [**repo-auditor**](repo-auditor/) | a whole GitHub repo / package before you clone or install | `npx skilladd amaniagent/skills/repo-auditor` |
+## Categories
+
+### 🛡️ security/
+Skills that vet other skills, repos, and agent output before you trust them. All score on
+the **same 0–8 danger scale** — evidence-anchored, fair, non-alarmist (they score *capability*
+and name the likely *intent* separately).
+
+| Skill | Audits |
+|-------|--------|
+| [**security/skill-auditor**](security/skill-auditor/) | a single agent skill / plugin / MCP |
+| [**security/repo-auditor**](security/repo-auditor/) | a whole GitHub repo / package (install scripts, CI, secrets, deps) |
+
+*(more categories — token-efficiency, rag, memory, tools — coming as they're built.)*
+
+## Install
+
+**Manual (works with any agent — always correct):**
+```bash
+git clone https://github.com/amaniagent/skills
+cp -r skills/security/skill-auditor ~/.claude/skills/   # or your agent's skills dir
+```
+
+**Marketplace installer** (installs the whole repo; per-tool syntax varies):
+```bash
+npx skills add amaniagent/skills        # skills.sh CLI
+# or:  npx add-skill amaniagent/skills
+```
+
+Then in your agent: *"audit this skill"* / *"audit this repo"* triggers the matching auditor.
 
 ## The 0–8 scale
 
 `0` safe · `1` benign · `2` low · `3` notable · `4` elevated · `5` risky · `6` dangerous ·
 `7` hostile · `8` extremely malicious. **Score = highest band with confirmed file:line evidence.**
 
-The point: a skill or repo can look *green* (popular, reputable author) yet carry a wide,
-undisclosed capability surface — a design skill that phones home and spawns permission-
-bypassed sub-agents, or a browser tool whose `postinstall` downloads a binary with no
-checksum. These auditors make that surface visible **without** falsely branding the author
+A skill or repo can look *green* (popular, reputable author) yet carry a wide, undisclosed
+capability surface. These auditors make it visible without falsely branding the author
 malicious. A `4/8` means "adopt with mitigation X," not "forbidden."
 
-## Why
-
-Built as part of [mnemo](https://github.com/amaniagent/mnemo) — an open memory framework
-for AI agents. Skills are executable trust: you install someone's instructions *and scripts*
-into an agent that can touch your files, your keys, your machine. A supply chain needs a gate.
-These are that gate. Live catalog + scores: **https://skills.j-amani.de**
+Live catalog + audit reports: **https://skills.j-amani.de**
 
 ## Read-only by design
 
-Neither auditor ever executes the target, runs `npm install`, fires CI, or fetches a
-download URL. Clone into a throwaway dir, read, score. That's it.
+No auditor ever executes the target, runs `npm install`, fires CI, or fetches a download
+URL. Clone into a throwaway dir, read, score.
 
-## License
+## Why
 
-MIT. Use them, fork them, harden them. PRs welcome — especially new evidence patterns.
+Part of [mnemo](https://github.com/amaniagent/mnemo) — an open memory framework for AI agents.
+Skills are executable trust: you install someone's instructions *and their scripts* into an
+agent that can touch your files, your keys, your machine. A supply chain needs a gate.
+
+MIT. PRs welcome — especially new evidence patterns and new categories.
