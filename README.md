@@ -14,6 +14,7 @@ and name the likely *intent* separately).
 |-------|--------|
 | [**security/skill-auditor**](security/skill-auditor/) | a single agent skill / plugin / MCP |
 | [**security/repo-auditor**](security/repo-auditor/) | a whole GitHub repo / package (install scripts, CI, secrets, deps) |
+| [**security/answer-verifier**](security/answer-verifier/) | an agent's *answer / output* — hallucination, fabricated sources, invented IDs, "done" claims with no artifact |
 
 *(more categories — token-efficiency, rag, memory, tools — coming as they're built.)*
 
@@ -31,7 +32,7 @@ npx skills add amaniagent/skills        # skills.sh CLI
 # or:  npx add-skill amaniagent/skills
 ```
 
-Then in your agent: *"audit this skill"* / *"audit this repo"* triggers the matching auditor.
+Then in your agent: *"audit this skill"* / *"audit this repo"* / *"verify this answer"* triggers the matching auditor.
 
 ## The 0–8 scale
 
@@ -41,6 +42,11 @@ Then in your agent: *"audit this skill"* / *"audit this repo"* triggers the matc
 A skill or repo can look *green* (popular, reputable author) yet carry a wide, undisclosed
 capability surface. These auditors make it visible without falsely branding the author
 malicious. A `4/8` means "adopt with mitigation X," not "forbidden."
+
+`answer-verifier` scores the same 0–8 shape on a parallel **confabulation-severity** axis
+(`0` grounded → `8` wholesale confabulation) and emits a `PASS / FLAG / FAIL` verdict — same
+evidence discipline (every claim → a source, or `UNVERIFIABLE`), applied to *output* instead of
+*code*.
 
 Live catalog + audit reports: **https://skills.j-amani.de**
 
