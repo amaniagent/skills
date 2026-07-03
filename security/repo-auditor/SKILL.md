@@ -44,14 +44,26 @@ Broader than a single skill: a repo attacks you at **more moments** — on `npm 
    Declared host? Pinned version? Checksum? Sink for what data?
 4. **Committed secrets** — API keys, tokens, `.env` with real values, private keys,
    `.pem`/`id_rsa`, cloud creds. (Patterns: `AKIA…`, `ghp_…`, `sk-…`, `-----BEGIN … KEY`.)
-5. **Dependencies** — lockfile present & pinned? Any dep that is typosquatted, unmaintained,
-   or known-malicious? `git`/`http` deps pointing at arbitrary URLs?
+5. **Dependencies & install config** — lockfile present & pinned? Any dep typosquatted,
+   unmaintained, or known-malicious? `git+http(s)://` / `http://` deps at arbitrary URLs?
+   Unscoped, internal-looking names that would resolve from a **public** registry (**dependency
+   confusion**)? And check install-config redirects: `.npmrc` / `.yarnrc` / `pip.conf` /
+   `.cargo/config.toml` injecting a `registry=` / `index-url=` host or an `_authToken=` — a silent
+   redirect of installs (or auth) to an attacker-controlled registry.
 6. **Subprocess/shell** — `exec/spawn/system`, backticks. Static or built from external input?
 7. **Sensitive filesystem** — reads of `~/.ssh`, `~/.aws`, `.env`, keychains, browser stores.
-8. **Obfuscation** — base64/hex/rot13/charCode + decode-then-execute. Minified non-vendor code.
+8. **Obfuscation** — base64/hex/rot13, or `fromCharCode` / `.split().reverse().join()` reassembly,
+   + decode-then-execute (`eval`, `Function`, bracket dispatch). Minified non-vendor code. Also
+   **invisible / bidirectional Unicode** hiding code from the reviewer: bidi controls (U+202A–
+   U+202E, U+2066–U+2069), zero-width (U+200B–U+200D, U+FEFF), homoglyph identifiers (non-ASCII).
 9. **Docker** — base image pinned by digest? `--privileged`? host mounts? secrets in layers?
 10. **Agent-facing files** — `AGENTS.md`, `.cursor/`, `.claude/settings*.json`, `CLAUDE.md`:
     do they install hooks or instruct an agent to act without asking / conceal actions?
+11. **Evasive / conditional execution** — install/CI/build code that fires only under certain
+    conditions to dodge review: env gating (`CI`, `GITHUB_ACTIONS`, `HOSTNAME`, `USER`), a
+    time-bomb (date compare), sandbox detection (`/proc/self/cgroup`, VM artifacts), or a long
+    `sleep` before the fetch/exec step. Gating is an intent signal: **+1 band (min 4); band 7
+    when it gates a network/exec payload to evade a sandbox.**
 
 ## Output format (exactly this)
 
@@ -64,7 +76,7 @@ EVIDENCE
 - [<checklist#>] <file>:<line> — <what it does> (band <n>)
 - ...
 
-ATTACK SURFACE: install-scripts=<y/n> ci-untrusted-code=<y/n> network-fetch-exec=<y/n> committed-secrets=<y/n> sensitive-fs=<y/n> obfuscation=<y/n>
+ATTACK SURFACE: install-scripts=<y/n> ci-untrusted-code=<y/n> network-fetch-exec=<y/n> committed-secrets=<y/n> sensitive-fs=<y/n> obfuscation=<y/n> evasion=<y/n>
 DEPENDENCY HYGIENE: lockfile=<y/n> pinned=<y/n> suspicious-deps=<none / list>
 README-HONEST: <yes / no — what the README hides>
 RECOMMENDATION: <safe to adopt / adopt with mitigation X (e.g. `npm ci --ignore-scripts`, pin actions by SHA) / do not adopt — reason>
