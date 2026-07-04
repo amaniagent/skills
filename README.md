@@ -15,6 +15,8 @@ and name the likely *intent* separately).
 | [**security/skill-auditor**](security/skill-auditor/) | a single agent skill / plugin / MCP |
 | [**security/repo-auditor**](security/repo-auditor/) | a whole GitHub repo / package (install scripts, CI, secrets, deps) |
 | [**security/answer-verifier**](security/answer-verifier/) | an agent's *answer / output* — hallucination, fabricated sources, invented IDs, "done" claims with no artifact |
+| [**security/dependency-auditor**](security/dependency-auditor/) | a project's *dependencies* — lockfile/pinning, typosquat, dependency confusion, install-redirect, malicious install scripts |
+| [**security/mcp-auditor**](security/mcp-auditor/) | an *MCP server* — tool scopes, injection in tool descriptions, arg-exfil, over-permissioned config |
 
 *(more categories — token-efficiency, rag, memory, tools — coming as they're built.)*
 
@@ -32,7 +34,8 @@ npx skills add amaniagent/skills        # skills.sh CLI
 # or:  npx add-skill amaniagent/skills
 ```
 
-Then in your agent: *"audit this skill"* / *"audit this repo"* / *"verify this answer"* triggers the matching auditor.
+Then in your agent: *"audit this skill"* / *"audit this repo"* / *"verify this answer"* /
+*"audit these dependencies"* / *"audit this MCP server"* triggers the matching auditor.
 
 ## The 0–8 scale
 
