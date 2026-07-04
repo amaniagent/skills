@@ -17,6 +17,8 @@ and name the likely *intent* separately).
 | [**security/answer-verifier**](security/answer-verifier/) | an agent's *answer / output* — hallucination, fabricated sources, invented IDs, "done" claims with no artifact |
 | [**security/dependency-auditor**](security/dependency-auditor/) | a project's *dependencies* — lockfile/pinning, typosquat, dependency confusion, install-redirect, malicious install scripts |
 | [**security/mcp-auditor**](security/mcp-auditor/) | an *MCP server* — tool scopes, injection in tool descriptions, arg-exfil, over-permissioned config |
+| [**security/prompt-injection-detector**](security/prompt-injection-detector/) | *untrusted content* an agent ingests (web/doc/email/RAG) — embedded & hidden prompt injection |
+| [**security/settings-auditor**](security/settings-auditor/) | *shipped agent config* — `.claude/settings.json` hooks that auto-run, permission rules that bypass the human prompt |
 
 *(more categories — token-efficiency, rag, memory, tools — coming as they're built.)*
 
@@ -35,7 +37,8 @@ npx skills add amaniagent/skills        # skills.sh CLI
 ```
 
 Then in your agent: *"audit this skill"* / *"audit this repo"* / *"verify this answer"* /
-*"audit these dependencies"* / *"audit this MCP server"* triggers the matching auditor.
+*"audit these dependencies"* / *"audit this MCP server"* / *"scan this for prompt injection"* /
+*"audit this settings.json"* triggers the matching auditor.
 
 ## The 0–8 scale
 
