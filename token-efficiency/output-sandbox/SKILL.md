@@ -70,13 +70,31 @@ Extracting the signal is **script work** — `grep`/`jq`/`awk`/`wc`, not model t
 log line by line. Pipe the *result* of the extraction into your reasoning, never the haystack. (Same
 discipline as `lean-replies`: mechanics belong in scripts.)
 
-## Optional: enforce it automatically
+## Optional: enforce it automatically (shipped hook)
 
 The discipline above is portable and needs nothing installed. If you want it enforced without
-relying on discipline, wire a **`PreToolUse` hook** that redirects any Bash command whose output
-would exceed a threshold into a log file and returns a truncated head/tail + the path — the same
-outcome an output-sandboxing plugin achieves, using only your own hook and standard tools (no
-extra dependency, no server). Keep the threshold generous so small outputs pass through untouched.
+relying on discipline, this skill ships a **`PostToolUse` hook** for the Bash tool:
+[`hooks/output-sandbox.sh`](hooks/output-sandbox.sh). It measures each Bash result and, if the
+output exceeds a threshold, writes the full output to `~/.cache/agent-runs/<ts>.log` and replaces
+what the agent sees with head+tail + the path — the same outcome an output-sandboxing plugin
+achieves, using only a hook and standard tools (no server, no dependency beyond `jq`).
+
+> **Why PostToolUse, not PreToolUse:** a `PreToolUse` hook fires *before* the command runs, so it
+> can't know the output size and would have to fragilely rewrite the command. `PostToolUse` sees
+> the real output and cleanly replaces it via `updatedToolOutput` — Claude then receives the
+> truncated version, not the firehose.
+
+Wire it into `settings.json` (thresholds are env-overridable: `OUTPUT_SANDBOX_MAX_LINES`,
+`OUTPUT_SANDBOX_MAX_CHARS`, `OUTPUT_SANDBOX_HEAD`, `OUTPUT_SANDBOX_TAIL`, `OUTPUT_SANDBOX_DIR`):
+
+```json
+{ "hooks": { "PostToolUse": [ { "matcher": "Bash",
+    "hooks": [ { "type": "command",
+      "command": "$HOME/.claude/hooks/output-sandbox.sh", "timeout": 15 } ] } ] } }
+```
+
+The hook is **fail-safe**: on any error (missing `jq`, non-Bash tool, small output) it exits 0 and
+leaves the output untouched, so it can never block or break a command. Small outputs pass through.
 
 ## Self-check
 
