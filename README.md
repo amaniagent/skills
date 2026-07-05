@@ -50,9 +50,24 @@ capability surface. These auditors make it visible without falsely branding the 
 malicious. A `4/8` means "adopt with mitigation X," not "forbidden."
 
 `answer-verifier` scores the same 0–8 shape on a parallel **confabulation-severity** axis
-(`0` grounded → `8` wholesale confabulation) and emits a `PASS / FLAG / FAIL` verdict — same
-evidence discipline (every claim → a source, or `UNVERIFIABLE`), applied to *output* instead of
-*code*.
+(`0` grounded → `8` wholesale confabulation) — same evidence discipline (every claim → a source,
+or `UNVERIFIABLE`), applied to *output* instead of *code*.
+
+### The verdict layer (two projections of the score)
+
+The 0–8 stays the ground truth; every auditor also emits two deterministic projections of it, so
+you can consume the result at the altitude you need:
+
+| SCORE | **GATE** (binary, for automation) | **LEVEL** (graded, for humans) |
+|-------|-----------------------------------|--------------------------------|
+| 0–2   | `PASS` | `OK` |
+| 3–4   | `FLAG` | `RISK` |
+| 5–6   | `FLAG` | `HIGH-RISK` |
+| 7–8   | `FLAG` | `ALERT` |
+
+**`PASS ⟺ OK`** (0–2, auto-trust); **`FLAG`** covers everything ≥3 and grades into
+`RISK` / `HIGH-RISK` / `ALERT`. A CI gate reads `GATE`; a human reads `LEVEL`; the reviewer reads
+the `SCORE` + evidence. Nothing is lost — the projections are pure convenience over the same band.
 
 Live catalog + audit reports: **https://skills.j-amani.de**
 

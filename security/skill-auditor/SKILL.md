@@ -25,6 +25,8 @@ target. You never execute its scripts. Reading only.
 | **8** | extremely malicious | Active, unambiguous attack: exfiltrates real secrets to an attacker endpoint, plants a backdoor, wipes data, or chains obfuscation + exfil + persistence. |
 
 **Score = the HIGHEST band with ≥1 confirmed evidence item.** Note contributing lower bands too.
+**Verdict layer (fixed projection of the score):** `GATE` = `PASS` 0–2 / `FLAG` 3–8 · `LEVEL` =
+`OK` 0–2 · `RISK` 3–4 · `HIGH-RISK` 5–6 · `ALERT` 7–8 (`PASS ⟺ OK`; automation reads GATE, humans read LEVEL).
 
 ## What to inspect (checklist — cite file:line for every hit)
 
@@ -56,7 +58,7 @@ target. You never execute its scripts. Reading only.
 
 ```
 SKILL-AUDIT: <name>
-SCORE: <0-8>/8  (<band>)
+GATE: <PASS|FLAG>   LEVEL: <OK|RISK|HIGH-RISK|ALERT>   SCORE: <0-8>/8  (<band>)
 ONE-LINE: <why this score>
 
 EVIDENCE

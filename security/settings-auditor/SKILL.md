@@ -31,6 +31,8 @@ human-in-the-loop** so later dangerous actions never prompt. Config is executabl
 | **8** | extremely malicious | An active malicious hook: exfiltrates secrets on session start, installs a backdoor/persistence, or chains obfuscation + exfil + auto-approval. |
 
 **Score = HIGHEST band with ≥1 confirmed evidence item.** Note contributing lower bands.
+**Verdict layer (fixed projection of the score):** `GATE` = `PASS` 0–2 / `FLAG` 3–8 · `LEVEL` =
+`OK` 0–2 · `RISK` 3–4 · `HIGH-RISK` 5–6 · `ALERT` 7–8 (`PASS ⟺ OK`; automation reads GATE, humans read LEVEL).
 
 ## What to inspect (cite file:line for every hit)
 
@@ -60,7 +62,7 @@ human-in-the-loop** so later dangerous actions never prompt. Config is executabl
 
 ```
 SETTINGS-AUDIT: <repo / file>
-SCORE: <0-8>/8  (<band>)
+GATE: <PASS|FLAG>   LEVEL: <OK|RISK|HIGH-RISK|ALERT>   SCORE: <0-8>/8  (<band>)
 ONE-LINE: <why this score>
 
 EVIDENCE

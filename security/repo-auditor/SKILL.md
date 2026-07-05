@@ -30,6 +30,8 @@ Broader than a single skill: a repo attacks you at **more moments** — on `npm 
 | **8** | extremely malicious | Active attack: exfiltrates real secrets to an attacker endpoint, backdoor, wiper, or obfuscation+exfil+persistence chained. |
 
 **Score = HIGHEST band with ≥1 confirmed evidence item.** Note contributing lower bands.
+**Verdict layer (fixed projection of the score):** `GATE` = `PASS` 0–2 / `FLAG` 3–8 · `LEVEL` =
+`OK` 0–2 · `RISK` 3–4 · `HIGH-RISK` 5–6 · `ALERT` 7–8 (`PASS ⟺ OK`; automation reads GATE, humans read LEVEL).
 
 ## What to inspect (cite file:line for every hit)
 
@@ -69,7 +71,7 @@ Broader than a single skill: a repo attacks you at **more moments** — on `npm 
 
 ```
 REPO-AUDIT: <org/repo>
-SCORE: <0-8>/8  (<band>)
+GATE: <PASS|FLAG>   LEVEL: <OK|RISK|HIGH-RISK|ALERT>   SCORE: <0-8>/8  (<band>)
 ONE-LINE: <why this score>
 
 EVIDENCE

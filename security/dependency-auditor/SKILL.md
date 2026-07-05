@@ -33,6 +33,8 @@ evidence. Say `unverifiable → run <scan>`, not "malicious".
 | **8** | extremely malicious | A dep with a confirmed, in-repo exfil/backdoor payload, or a pinned reference to a known-malicious artifact chained with a redirect. |
 
 **Score = HIGHEST band with ≥1 confirmed evidence item.** Note contributing lower bands.
+**Verdict layer (fixed projection of the score):** `GATE` = `PASS` 0–2 / `FLAG` 3–8 · `LEVEL` =
+`OK` 0–2 · `RISK` 3–4 · `HIGH-RISK` 5–6 · `ALERT` 7–8 (`PASS ⟺ OK`; automation reads GATE, humans read LEVEL).
 
 ## What to inspect (cite file:line for every hit)
 
@@ -57,7 +59,7 @@ evidence. Say `unverifiable → run <scan>`, not "malicious".
 
 ```
 DEP-AUDIT: <project / package>
-SCORE: <0-8>/8  (<band>)
+GATE: <PASS|FLAG>   LEVEL: <OK|RISK|HIGH-RISK|ALERT>   SCORE: <0-8>/8  (<band>)
 ONE-LINE: <why this score>
 
 EVIDENCE

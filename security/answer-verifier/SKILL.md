@@ -37,7 +37,9 @@ verdict.
 | **8** | wholesale confabulation | The answer's core substance is invented and asserted as **verified/retrieved** ("I checked the docs and…", "the API returns…", "search confirms…") when no such check occurred and no such surface exists. |
 
 **Score = the HIGHEST band with ≥1 confirmed finding.** Note contributing lower bands too.
-**Verdict:** 0–1 → `PASS` · 2–4 → `FLAG` (verify flagged claims before trusting) · 5–8 → `FAIL` (do not trust as-is).
+**Verdict layer (fixed projection of severity):** `GATE` = `PASS` 0–2 / `FLAG` 3–8 · `LEVEL` =
+`OK` 0–2 · `RISK` 3–4 · `HIGH-RISK` 5–6 · `ALERT` 7–8. `PASS ⟺ OK` (trust the output); `FLAG/RISK`
+= verify the flagged claims before trusting; `FLAG/HIGH-RISK`+`ALERT` = do not trust as-is.
 
 ## What to inspect (cite the answer's `L<line>` for every hit)
 
@@ -71,7 +73,7 @@ verdict.
 
 ```
 ANSWER-VERIFY: <target / label>
-VERDICT: <PASS | FLAG | FAIL>   SEVERITY: <0-8>/8 (<band>)
+GATE: <PASS|FLAG>   LEVEL: <OK|RISK|HIGH-RISK|ALERT>   SEVERITY: <0-8>/8 (<band>)
 ONE-LINE: <why this verdict>
 
 CLAIM LEDGER   (one line per checked claim; status ∈ SUPPORTED | UNSUPPORTED | UNVERIFIABLE | CONTRADICTED | FABRICATED | OVERCLAIMED)
