@@ -3,6 +3,20 @@
 Security & tooling skills for AI coding agents (Claude Code, Cursor, Codex, …),
 organized by category. Each skill is one folder with a `SKILL.md`.
 
+## Why this exists — the 93 % problem
+
+Reportedly, ~93 % of permission prompts in agentic coding tools get confirmed. That's not
+control — that's click fatigue. Every dialog is a mini-meeting the human attends without
+context. The alternative isn't *more* prompts, and it isn't auto-approving everything either.
+
+It's **policy instead of popups**: agree on the rules once, in daylight, with a clear head —
+what an agent may never do, what needs an explicit sign-off, what is free — and then verify
+where verification actually works: **in readable traces afterwards**, not in dialog number 47
+of the day. These skills are that policy layer: auditors that vet skills, repos, dependencies,
+MCP servers, agent configs and agent *answers* before you trust them, each with
+evidence-anchored scores instead of vibes. Built and used daily in a real one-human,
+many-agents setup.
+
 ## Categories
 
 ### 🛡️ security/
