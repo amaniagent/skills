@@ -6,102 +6,43 @@ description: >-
 
 # Exa CLI Skill
 
-## Identity
-- **Name**: cli-anything-exa
-- **Version**: 1.0.0
-- **Category**: search
-- **Entry Point**: `cli-anything-exa`
+Agent-native CLI for the **Exa** neural search API: web search across modes plus full-text or
+highlighted page contents. Entry point `cli-anything-exa`, v1.0.0.
 
-## What This CLI Does
-Provides an agent-native command-line interface to the Exa API — a neural search engine
-optimised for AI agent workflows. Supports web search across multiple modes (fast, deep,
-deep-reasoning) and fetching full-text or highlighted page contents.
+## Setup
 
-## Prerequisites
-<!-- security: do NOT pip install — package name unregistered on PyPI (dependency-confusion risk), see ATTRIBUTION.md -->
-- Python >= 3.10
-- `cli-hub install exa`
-- `export EXA_API_KEY="your-api-key"` (get one at https://dashboard.exa.ai/api-keys)
+Needs Python >= 3.10.
 
-## Installation
+<!-- security: install ONLY via cli-hub or the git+ URL below — the bare PyPI name is unregistered (dependency-confusion risk), see ATTRIBUTION.md -->
 ```bash
+cli-hub install exa
+# or, direct from source:
 pip install git+https://github.com/HKUDS/CLI-Anything.git#subdirectory=exa/agent-harness
+
+export EXA_API_KEY="…"                  # https://dashboard.exa.ai/api-keys
+cli-anything-exa server status          # verify key + connectivity
 ```
 
-## Command Reference
+## Commands
 
-### search — Web search
 ```bash
-cli-anything-exa search "<query>" [OPTIONS]
-
-Options:
+cli-anything-exa [--json] search "<query>" [OPTIONS]
   --type       auto|fast|instant|deep|deep-reasoning  (default: auto)
   --num-results / -n   1–100  (default: 10)
   --category   company|people|research-paper|news|personal-site|financial-report
   --content    highlights|text|summary|none  (default: highlights)
   --freshness  smart|always|never  (default: smart)
-  --include-domains DOMAIN   (repeatable)
-  --exclude-domains DOMAIN   (repeatable)
-  --from DATE   ISO 8601 start published date
-  --to   DATE   ISO 8601 end published date
-  --location CC  Two-letter country code for geo-bias
+  --include-domains / --exclude-domains DOMAIN   (repeatable)
+  --from / --to DATE   ISO 8601 published-date range
+  --location CC        two-letter country code, geo-bias
+
+cli-anything-exa [--json] contents <url> [url ...] [--content …] [--freshness …]
 ```
 
-### contents — Fetch page contents
-```bash
-cli-anything-exa contents <url> [url ...] [--content text|highlights|summary] [--freshness smart|always|never]
-```
-
-### server status — Verify API key and connectivity
-```bash
-cli-anything-exa server status
-```
-
-## JSON Output
-All commands support `--json` at the root level for machine-readable output:
-```bash
-cli-anything-exa --json search "latest LLM papers" --num-results 5
-```
-
-## Common Agent Patterns
-
-### Fast keyword lookup
-```bash
-cli-anything-exa --json search "site:arxiv.org transformer architectures" --type fast --content highlights
-```
-
-### Deep research on a topic
-```bash
-cli-anything-exa --json search "EU AI Act compliance requirements 2024" --type deep --content text
-```
-
-### Academic paper discovery
-```bash
-cli-anything-exa --json search "retrieval augmented generation" --category research-paper --num-results 20
-```
-
-### Company intelligence
-```bash
-cli-anything-exa --json search "Anthropic funding history" --category company
-```
-
-### News monitoring
-```bash
-cli-anything-exa --json search "AI regulation news" --category news --from 2024-01-01
-```
-
-### Fetch full content for summarisation
-```bash
-cli-anything-exa --json contents https://example.com/article --content text
-```
-
-## Interactive REPL
-```bash
-cli-anything-exa   # No subcommand → enters REPL
-```
-Type commands without the `cli-anything-exa` prefix. Type `exit` or `quit` to leave.
+`--json` is a root-level flag (before the subcommand); no subcommand enters a REPL.
 
 ## Notes
+
 - `highlights` content mode is 10× more token-efficient than `text` — prefer it for agent pipelines
 - `--type deep` triggers multi-step reasoning; slower but synthesises across many sources
 - `--category company` and `--category people` do not support date or domain-exclude filters

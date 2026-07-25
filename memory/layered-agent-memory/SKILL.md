@@ -72,24 +72,19 @@ compose them by their **registry ID**. Two hard rules:
 
 ## Write discipline for delegated memory
 
-When a sub-agent is asked to persist something, its output must be a **file, not a chat message**.
-Put it in the prompt explicitly: *"Write the result to `<path>`. Answering only in chat = failure.
-Confirm with the path."* The caller keeps the full run log so a chat-only answer is still
-salvageable. This one rule eliminates the most common "the agent said it saved it but didn't" bug.
+When a sub-agent is asked to persist something, its output must be a **file, not a chat message**
+(the artifact rule in `lean-replies`). This one rule eliminates the most common "the agent said it
+saved it but didn't" bug.
 
 ## Session-RAG — survive context compaction
 
-A long conversation loses its own early decisions when the window compacts. Fix it by making the
-**transcript itself a retrievable wiki**:
+A long conversation loses its own early decisions when the window compacts. The **session** layer
+is the fix: index the archived transcript as blocks (one user turn + the response) and query it
+after a compaction instead of guessing. Build it as described in `composable-wiki-rag` — that skill
+owns the retrieval mechanics.
 
-1. Periodically split the running transcript into **blocks** (a user turn + the agent's response
-   to it), each with light YAML metadata.
-2. Index the blocks (BM25 is enough — see composable retrieval patterns) on a cron or on demand.
-3. After a compaction, **query the session-RAG instead of guessing**: ask "why did we choose X?"
-   and get back the *original* blocks — the real words, not a lossy summary.
-
-**Anchored replies:** a session-RAG answer returns the source blocks, not a paraphrase, so the
-agent re-reads what was actually decided. Memory that hands back the primary source can't
+The one rule specific to memory: an answer must return the **source blocks, not a paraphrase**, so
+the agent re-reads what was actually decided. Memory that hands back the primary source can't
 hallucinate the past.
 
 ## Why markdown beats an opaque vector store here

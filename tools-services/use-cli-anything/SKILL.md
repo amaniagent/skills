@@ -5,15 +5,12 @@ description: Before hand-rolling curl/API calls or docker invocations to drive a
 
 # Use CLI-Anything — reach for an agent-native CLI before hand-rolling glue
 
-`cli-hub` (CLI-Anything) is a manager for ~96 **agent-native CLIs** ("harnesses") plus public
-CLIs, grouped by category, with a capability search and curated multi-CLI workflow matrices. Each
-harness is a deterministic wrapper (stable flags, structured output) that ships **its own
-`SKILL.md`** — so it self-documents for the agent driving it.
+`cli-hub` (CLI-Anything) manages ~96 **agent-native CLIs** ("harnesses") plus public CLIs. Each
+harness is a deterministic wrapper (stable flags, structured output) shipping **its own
+`SKILL.md`**, so it self-documents for the agent driving it.
 
-**The reflex:** when you're about to write raw `curl`/API calls or `docker` glue to operate a
-tool, first check if cli-hub already has an agent-native CLI for it. An agent-native CLI beats
-hand-rolled HTTP every time — fewer tokens, deterministic flags, structured output, reproducible,
-and it carries a SKILL.md telling you exactly how to use it.
+**The reflex:** before writing raw `curl`/API calls or `docker` glue to operate a tool, check
+whether cli-hub already has an agent-native CLI for it.
 
 ## Discover
 
@@ -46,21 +43,11 @@ to be agent-driven and that SKILL.md is the authoritative usage guide.
 
 ## Multi-CLI workflows: matrices
 
-For bigger tasks that span several tools, a **matrix** is a curated bundle (e.g. `video-creation`,
-`knowledge-research`, `image-design`, `game-development`, `3d-cad`):
-
-```bash
-cli-hub matrix list                    # available matrices + install progress
-cli-hub matrix search <query>          # by capability / provider / recipe
-cli-hub matrix recipes                 # task-oriented recipes across matrices
-cli-hub matrix info <name>             # what's in it
-cli-hub matrix preflight <name>        # which providers are available in this environment
-cli-hub matrix doctor <name>           # audit install completeness, get fix suggestions
-cli-hub matrix install <name>          # install the matrix's CLIs (optionally scoped)
-```
-
-Run `preflight`/`doctor` before committing to a matrix — they tell you what's missing and what's
-already usable, so you don't install a 14-CLI bundle to use one tool.
+A **matrix** is a curated bundle for tasks spanning several tools (`video-creation`,
+`knowledge-research`, `image-design`, `game-development`, `3d-cad`). Same verbs under
+`cli-hub matrix …` (`list`, `search`, `recipes`, `info`, `install`) plus two worth knowing:
+`preflight` (which providers exist in this environment) and `doctor` (install completeness + fix
+suggestions). Run those before committing, so you don't install a 14-CLI bundle to use one tool.
 
 ## Trust gate — install and launch run code
 
@@ -78,8 +65,7 @@ not read-only lookups:
 
 ## When there's no harness yet
 
-If `cli-hub search <tool>` returns nothing, no agent-native CLI exists yet for that tool — fall
-back to its API/CLI directly (see the tool's own `use-<tool>` skill). The CLI-Anything harness is
-also the *preferred shape* for wrapping a self-hosted service for agents: a small deterministic CLI
-(entry point + `client.py` + a `SKILL.md`) that any agent can drive, rather than every agent
+If `cli-hub search <tool>` returns nothing, fall back to the tool's own API/CLI (see its
+`use-<tool>` skill). The harness shape is still the target when *you* wrap a self-hosted service:
+entry point + `client.py` + a `SKILL.md`, so agents drive a deterministic CLI instead of each
 re-deriving the raw HTTP calls.

@@ -6,153 +6,23 @@ description: >-
 
 # cli-anything-obsidian
 
-Knowledge management and note-taking via the Obsidian Local REST API. Designed for AI agents and power users who need to manage notes, search the vault, and execute commands without the GUI.
+Vault access via the Obsidian **Local REST API** — for what a plain file read/write on the vault
+folder can't do: live queries, the active note, and the command palette.
 
-## Installation
-
-This CLI is installed as part of the cli-anything-obsidian package:
+Requires Python 3.10+ and Obsidian running with the
+[Local REST API plugin](https://github.com/coddingtonbear/obsidian-local-rest-api) enabled.
 
 <!-- security: do NOT pip install — package name unregistered on PyPI (dependency-confusion risk), see ATTRIBUTION.md -->
 ```bash
 cli-hub install obsidian
+export OBSIDIAN_API_KEY=YOUR_KEY     # or --api-key
+                                     # host defaults to https://localhost:27124, override with --host
+cli-anything-obsidian server status  # verify the API is up before anything else
 ```
 
-**Prerequisites:**
-- Python 3.10+
-- Obsidian must be installed and running with the [Local REST API plugin](https://github.com/coddingtonbear/obsidian-local-rest-api) enabled
-
-
-## Usage
-
-### Basic Commands
+## The parts that aren't just file I/O
 
 ```bash
-# Show help
-cli-anything-obsidian --help
-
-# Start interactive REPL mode
-cli-anything-obsidian
-
-# List vault files
-cli-anything-obsidian vault list
-
-# Run with JSON output (for agent consumption)
-cli-anything-obsidian --json vault list
-```
-
-### REPL Mode
-
-When invoked without a subcommand, the CLI enters an interactive REPL session:
-
-```bash
-cli-anything-obsidian
-# Enter commands interactively with tab-completion and history
-```
-
-
-## Command Groups
-
-
-### Vault
-
-Vault file management commands.
-
-| Command | Description |
-|---------|-------------|
-| `list` | List files in the vault or a subdirectory |
-| `read` | Read the content of a note |
-| `create` | Create a new note |
-| `update` | Overwrite an existing note |
-| `delete` | Delete a note from the vault |
-| `append` | Append content to an existing note |
-
-
-### Search
-
-Vault search commands.
-
-| Command | Description |
-|---------|-------------|
-| `query` | Search using Obsidian query syntax |
-| `simple` | Plain text search across the vault |
-
-
-### Note
-
-Active note commands.
-
-| Command | Description |
-|---------|-------------|
-| `active` | Get the currently active note in Obsidian |
-| `open` | Open a note in the Obsidian editor |
-
-
-### Command
-
-Obsidian command palette commands.
-
-| Command | Description |
-|---------|-------------|
-| `list` | List all available Obsidian commands |
-| `execute` | Execute a command by its ID |
-
-
-### Server
-
-Server status and info commands.
-
-| Command | Description |
-|---------|-------------|
-| `status` | Check if the Obsidian Local REST API is running |
-
-
-### Session
-
-Session state commands.
-
-| Command | Description |
-|---------|-------------|
-| `status` | Show current session state |
-
-
-
-## Examples
-
-
-### List and Read Notes
-
-```bash
-# List all vault files
-cli-anything-obsidian vault list
-
-# List files in a subdirectory
-cli-anything-obsidian vault list "Daily Notes"
-
-# Read a note
-cli-anything-obsidian vault read "Projects/my-project.md"
-```
-
-
-### Create and Update Notes
-
-```bash
-# Create a new note
-cli-anything-obsidian vault create "Projects/new-project.md" --content "# New Project"
-
-# Update (overwrite) a note
-cli-anything-obsidian vault update "Projects/new-project.md" --content "# Updated Content"
-
-# Append to a note
-cli-anything-obsidian vault append "Projects/new-project.md" --content "\n## New Section"
-```
-
-
-### Search
-
-```bash
-# Plain text search (GET /search/simple/)
-cli-anything-obsidian search simple "meeting notes"
-
 # Dataview DQL query — default --type dql, sent as
 # application/vnd.olrapi.dataview.dql+txt
 cli-anything-obsidian search query 'TABLE file.link FROM "Projects"'
@@ -160,80 +30,26 @@ cli-anything-obsidian search query 'TABLE file.link FROM "Projects"'
 # JsonLogic query — application/vnd.olrapi.jsonlogic+json
 cli-anything-obsidian search query --type jsonlogic \
   '{"==":[{"var":"frontmatter.status"},"active"]}'
-```
 
-
-### Commands
-
-```bash
-# List available commands
+# Command palette: list IDs, then run one
 cli-anything-obsidian command list
-
-# Execute a command by ID
 cli-anything-obsidian command execute "editor:toggle-bold"
+
+# The note the human is looking at right now
+cli-anything-obsidian note active
 ```
 
+The **content type is the whole trick** with `search query`: DQL and JsonLogic go to two different
+content types behind one `--type` flag, so the flag has to match the query language you wrote.
 
-### Interactive REPL Session
+## The rest
 
-Start an interactive session for exploratory use.
+`vault list|read|create|update|delete|append`, `search simple <text>` (plain text,
+`GET /search/simple/`), `note open`, `session status`. For these a direct Read/Write/Grep on the
+vault folder usually does the job without the API.
 
-```bash
-cli-anything-obsidian
-# Enter commands interactively
-# Use 'help' to see available commands
-```
-
-
-### API Key Configuration
-
-```bash
-# Via flag
-cli-anything-obsidian --api-key YOUR_KEY vault list
-
-# Via environment variable (recommended for agents)
-export OBSIDIAN_API_KEY=YOUR_KEY
-cli-anything-obsidian vault list
-```
-
-
-## State Management
-
-The CLI maintains lightweight session state:
-
-- **API key**: Configurable via `--api-key` or `OBSIDIAN_API_KEY` environment variable
-- **Host URL**: Defaults to `https://localhost:27124`; configurable via `--host`
-
-## Output Formats
-
-All commands support dual output modes:
-
-- **Human-readable** (default): Tables, colors, formatted text
-- **Machine-readable** (`--json` flag): Structured JSON for agent consumption
-
-```bash
-# Human output
-cli-anything-obsidian vault list
-
-# JSON output for agents
-cli-anything-obsidian --json vault list
-```
-
-## For AI Agents
-
-When using this CLI programmatically:
-
-1. **Always use `--json` flag** for parseable output
-2. **Check return codes** - 0 for success, non-zero for errors
-3. **Parse stderr** for error messages on failure
-4. **Set `OBSIDIAN_API_KEY`** environment variable to avoid passing `--api-key` on every call
-5. **Verify Obsidian is running** with `server status` before other commands
-
-## More Information
-
-- Full documentation: See README.md in the package
-- Test coverage: See TEST.md in the package
-- Methodology: See HARNESS.md in the cli-anything-plugin
+Driving it from an agent: always `--json`, check the return code (0 = success), read stderr for the
+error message on failure. No subcommand enters an interactive REPL.
 
 ## Version
 
