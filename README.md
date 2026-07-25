@@ -19,7 +19,7 @@ many-agents setup.
 
 ## Categories
 
-### 🛡️ security/
+### 🛡️ security/ (7 skills)
 Skills that vet other skills, repos, and agent output before you trust them. All score on
 the **same 0–8 danger scale** — evidence-anchored, fair, non-alarmist (they score *capability*
 and name the likely *intent* separately).
@@ -34,7 +34,40 @@ and name the likely *intent* separately).
 | [**security/prompt-injection-detector**](security/prompt-injection-detector/) | *untrusted content* an agent ingests (web/doc/email/RAG) — embedded & hidden prompt injection |
 | [**security/settings-auditor**](security/settings-auditor/) | *shipped agent config* — `.claude/settings.json` hooks that auto-run, permission rules that bypass the human prompt |
 
-*(more categories — token-efficiency, rag, memory, tools — coming as they're built.)*
+### 🍎 apple/ (7 skills)
+Platform-specific Apple development: App Intents, WorkoutKit/HealthKit, Metal shaders,
+WidgetKit, and driving Xcode agentically via MCP.
+
+### 🔧 tools-services/ (15 skills)
+Driving external tools and services from an agent — the seven vendored `cli-anything-*`
+CLI wrappers (ChromaDB, Exa, Obsidian, Ollama, Zotero, mermaid, browser) plus GitHub org
+automation, crawling, self-hosted n8n/Tailscale/ntfy, and the `use-gortex` / `use-hermes`
+delegation skills.
+
+### 🍏 swift/ (5 skills)
+Swift beyond iOS apps: embedded firmware, Vapor backends, porting from React Native or
+other codebases, and Swift on Android.
+
+### ⚡ token-efficiency/ (4 skills)
+Spending fewer tokens without losing signal — context budgeting/compaction, sandboxing
+large tool output to disk, and lean agent replies.
+
+### 🧩 workflow/ (3 skills)
+Process discipline for agentic work: TDD enforcement, writing bite-sized implementation
+plans, and plan-review prompting.
+
+### 🌐 web/ (2 skills)
+SEO fundamentals and Web3 wallet integration (signature/threat model, EIP-712, EIP-7702).
+
+### 🌱 iot/ (1 skill)
+Indoor LED grow control on ESP32 — VPD-based regulation instead of naive %RH/setpoint.
+
+### 🧠 memory/ (1 skill)
+Layered markdown+YAML agent memory with sensitivity enforced by storage location.
+
+### 📚 rag/ (1 skill)
+RAG as many small composable wikis merged via reciprocal rank fusion instead of one
+monolithic vector DB.
 
 ## Install
 

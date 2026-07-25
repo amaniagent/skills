@@ -21,10 +21,8 @@ Activate this skill when:
 - Budget triggers are needed for masking, compaction, or partitioning
 
 Do not activate this skill for adjacent work owned by other skills:
-- Explaining why attention or context windows behave this way: `context-fundamentals`.
-- Diagnosing active lost-in-middle, poisoning, distraction, confusion, or clash: `context-degradation`.
-- Designing a structured handoff summary for a long conversation: `context-compression`.
-- Storing large outputs, plans, or logs as files: `filesystem-context`.
+- Storing large outputs, plans, or logs as files: `output-sandbox`.
+- Persistent retrieval layers that feed context just in time: `layered-agent-memory`.
 
 ## Core Concepts
 
@@ -186,12 +184,9 @@ triggers:
 
 ## Integration
 
-This skill owns token-efficiency tactics and budget policy. Adjacent skills own diagnosis, storage, and architecture:
+This skill owns token-efficiency tactics and budget policy. Adjacent skills own storage and
+architecture:
 
-- `context-fundamentals`: mental models for why context quality and attention placement matter.
-- `context-degradation`: diagnosis when output quality has already dropped.
-- `context-compression`: lossy summarization and handoff strategy.
-- `filesystem-context`: file-backed offloading for full outputs and logs.
-- `multi-agent-patterns`: partitioning work across isolated agent contexts.
-- `evaluation`: measuring whether the optimization improved quality, cost, or latency.
-- `memory-systems`: persistent retrieval layers that feed context just in time.
+- `output-sandbox`: file-backed offloading for full outputs and logs.
+- `layered-agent-memory`: persistent retrieval layers that feed context just in time.
+- `context-thrift`: overlapping token-thrift tactics for tool outputs, reads, and retrieval scoping.

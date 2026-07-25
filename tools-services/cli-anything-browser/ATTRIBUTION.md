@@ -4,7 +4,7 @@ Vendored from an external project (not authored by amaniagent), audit-gated per 
 
 | | |
 |---|---|
-| **Source** | https://github.com/agent0ai/CLI-Anything (HKUDS/CLI-Anything) |
+| **Source** | https://github.com/HKUDS/CLI-Anything (moved from agent0ai/CLI-Anything, which 404s as of 2026-07-25; confirmed same project via identical `skills/` layout and file paths) |
 | **Path upstream** | `skills/cli-anything-browser/SKILL.md` |
 | **Author** | CLI-Anything Team (HKUDS) and contributors |
 | **License** | Apache-2.0 — see `LICENSE` in this folder (retained per the license terms) |
