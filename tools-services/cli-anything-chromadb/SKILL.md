@@ -12,8 +12,9 @@ A stateless command-line interface for ChromaDB vector database, built on the HT
 
 This CLI is installed as part of the cli-anything-chromadb package:
 
+<!-- security: do NOT pip install — package name unregistered on PyPI (dependency-confusion risk), see ATTRIBUTION.md -->
 ```bash
-pip install cli-anything-chromadb
+cli-hub install chromadb
 ```
 
 **Prerequisites:**

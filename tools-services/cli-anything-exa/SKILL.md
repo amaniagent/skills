@@ -18,8 +18,9 @@ optimised for AI agent workflows. Supports web search across multiple modes (fas
 deep-reasoning) and fetching full-text or highlighted page contents.
 
 ## Prerequisites
+<!-- security: do NOT pip install — package name unregistered on PyPI (dependency-confusion risk), see ATTRIBUTION.md -->
 - Python >= 3.10
-- `pip install cli-anything-exa`
+- `cli-hub install exa`
 - `export EXA_API_KEY="your-api-key"` (get one at https://dashboard.exa.ai/api-keys)
 
 ## Installation

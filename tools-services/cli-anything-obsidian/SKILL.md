@@ -12,8 +12,9 @@ Knowledge management and note-taking via the Obsidian Local REST API. Designed f
 
 This CLI is installed as part of the cli-anything-obsidian package:
 
+<!-- security: do NOT pip install — package name unregistered on PyPI (dependency-confusion risk), see ATTRIBUTION.md -->
 ```bash
-pip install cli-anything-obsidian
+cli-hub install obsidian
 ```
 
 **Prerequisites:**

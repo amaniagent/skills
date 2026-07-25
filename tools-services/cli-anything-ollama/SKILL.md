@@ -12,8 +12,9 @@ Local LLM inference and model management via the Ollama REST API. Designed for A
 
 This CLI is installed as part of the cli-anything-ollama package:
 
+<!-- security: do NOT pip install — package name unregistered on PyPI (dependency-confusion risk), see ATTRIBUTION.md -->
 ```bash
-pip install cli-anything-ollama
+cli-hub install ollama
 ```
 
 **Prerequisites:**

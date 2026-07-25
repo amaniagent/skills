@@ -12,8 +12,9 @@ Create, edit, and render Mermaid diagrams via stateful project files and the mer
 
 This CLI is installed as part of the cli-anything-mermaid package:
 
+<!-- security: do NOT pip install — package name unregistered on PyPI (dependency-confusion risk), see ATTRIBUTION.md -->
 ```bash
-pip install cli-anything-mermaid
+cli-hub install mermaid
 ```
 
 **Prerequisites:**
