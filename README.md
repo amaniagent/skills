@@ -38,23 +38,22 @@ and name the likely *intent* separately).
 Platform-specific Apple development: App Intents, WorkoutKit/HealthKit, Metal shaders,
 WidgetKit, and driving Xcode agentically via MCP.
 
-### 🔧 tools-services/ (15 skills)
-Driving external tools and services from an agent — the seven vendored `cli-anything-*`
-CLI wrappers (ChromaDB, Exa, Obsidian, Ollama, Zotero, mermaid, browser) plus GitHub org
-automation, crawling, self-hosted n8n/Tailscale/ntfy, and the `use-gortex` / `use-hermes`
-delegation skills.
+### 🔧 tools-services/ (10 skills)
+Driving external tools and services from an agent — the two vendored `cli-anything-*`
+CLI wrappers (Exa, Obsidian) plus GitHub org automation, crawling, self-hosted
+n8n/Tailscale/ntfy, and the `use-gortex` / `use-hermes` delegation skills.
 
 ### 🍏 swift/ (5 skills)
 Swift beyond iOS apps: embedded firmware, Vapor backends, porting from React Native or
 other codebases, and Swift on Android.
 
-### ⚡ token-efficiency/ (4 skills)
-Spending fewer tokens without losing signal — context budgeting/compaction, sandboxing
-large tool output to disk, and lean agent replies.
+### ⚡ token-efficiency/ (3 skills)
+Spending fewer tokens without losing signal — context budgeting, sandboxing large tool
+output to disk, and lean agent replies.
 
-### 🧩 workflow/ (3 skills)
-Process discipline for agentic work: TDD enforcement, writing bite-sized implementation
-plans, and plan-review prompting.
+### 🧩 workflow/ (2 skills)
+Process discipline for agentic work: TDD enforcement and writing bite-sized implementation
+plans.
 
 ### 🌐 web/ (2 skills)
 SEO fundamentals and Web3 wallet integration (signature/threat model, EIP-712, EIP-7702).

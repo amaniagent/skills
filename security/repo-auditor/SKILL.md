@@ -46,12 +46,10 @@ Broader than a single skill: a repo attacks you at **more moments** — on `npm 
    Declared host? Pinned version? Checksum? Sink for what data?
 4. **Committed secrets** — API keys, tokens, `.env` with real values, private keys,
    `.pem`/`id_rsa`, cloud creds. (Patterns: `AKIA…`, `ghp_…`, `sk-…`, `-----BEGIN … KEY`.)
-5. **Dependencies & install config** — lockfile present & pinned? Any dep typosquatted,
-   unmaintained, or known-malicious? `git+http(s)://` / `http://` deps at arbitrary URLs?
-   Unscoped, internal-looking names that would resolve from a **public** registry (**dependency
-   confusion**)? And check install-config redirects: `.npmrc` / `.yarnrc` / `pip.conf` /
-   `.cargo/config.toml` injecting a `registry=` / `index-url=` host or an `_authToken=` — a silent
-   redirect of installs (or auth) to an attacker-controlled registry.
+5. **Dependencies & install config** — dependency-level checks: run the dedicated
+   dependency-auditor skill (lockfile/pinning, typosquat, dependency confusion, `.npmrc`/registry
+   redirects). Here, only flag whether a lockfile is present at all — its absence widens every
+   other finding in this list.
 6. **Subprocess/shell** — `exec/spawn/system`, backticks. Static or built from external input?
 7. **Sensitive filesystem** — reads of `~/.ssh`, `~/.aws`, `.env`, keychains, browser stores.
 8. **Obfuscation** — base64/hex/rot13, or `fromCharCode` / `.split().reverse().join()` reassembly,
@@ -79,7 +77,7 @@ EVIDENCE
 - ...
 
 ATTACK SURFACE: install-scripts=<y/n> ci-untrusted-code=<y/n> network-fetch-exec=<y/n> committed-secrets=<y/n> sensitive-fs=<y/n> obfuscation=<y/n> evasion=<y/n>
-DEPENDENCY HYGIENE: lockfile=<y/n> pinned=<y/n> suspicious-deps=<none / list>
+DEPENDENCY HYGIENE: lockfile=<y/n> — for pinning/typosquat/confusion/registry-redirect, see dependency-auditor
 README-HONEST: <yes / no — what the README hides>
 RECOMMENDATION: <safe to adopt / adopt with mitigation X (e.g. `npm ci --ignore-scripts`, pin actions by SHA) / do not adopt — reason>
 ```
