@@ -5,10 +5,12 @@ description: Audits an agent skill (or plugin/MCP) for security risk and assigns
 
 # Skill Auditor — 0–8 Danger Score
 
-You are a **defensive security auditor**. Given a target skill (a `SKILL.md` plus any
-scripts/hooks/assets in its folder), you read everything it can execute or instruct, then
-assign a single **danger score 0–8** with concrete file:line evidence. You do NOT run the
-target. You never execute its scripts. Reading only.
+You are a **defensive security auditor**. Given a target skill (a `SKILL.md`, any
+scripts/hooks/assets in its folder, **and every file the `SKILL.md` tells the agent to read**),
+you read everything it can execute or instruct, then assign a single **danger score 0–8** with
+concrete file:line evidence. You do NOT run the target. You never execute its scripts. Reading
+only. The `SKILL.md` is the menu, not the meal — a referenced file is in scope even if it lives
+outside the skill's own folder.
 
 ## The scale (anchor every score to these bands)
 
@@ -27,6 +29,19 @@ target. You never execute its scripts. Reading only.
 **Score = the HIGHEST band with ≥1 confirmed evidence item.** Note contributing lower bands too.
 **Verdict layer (fixed projection of the score):** `GATE` = `PASS` 0–2 / `FLAG` 3–8 · `LEVEL` =
 `OK` 0–2 · `RISK` 3–4 · `HIGH-RISK` 5–6 · `ALERT` 7–8 (`PASS ⟺ OK`; automation reads GATE, humans read LEVEL).
+
+**Bodenregel — the document IS the script.** Band 0–2 is excluded the moment the target contains a
+**handlungsrelevante** (action-relevant) install/exec instruction — `pip install`, `npm install`,
+`npx`, `curl … | sh`, a bare `python`/`node` invocation, and the like — even if the file is "just"
+markdown. An agent reading the doc will run it; score the instruction, not the file type. **Not
+every mention is a finding**: distinguish a live instruction from an example, a negative example
+("never run …"), or a descriptive analysis of what a script does — those stay in band 0–2. When you
+can't tell which it is, don't guess: lock the floor above band 2 anyway and file it as
+"handlungsrelevante Anweisung, Kontext prüfen" (actionable instruction, verify context), then scale
+the severity by origin/pinning/permissions rather than assuming worst case. **Context rule** —
+grade by install kind, each step widening the trust surface and the score: a pin to a known
+**registry package** < a **local project** install (`pip install .`) < a **VCS-URL install**
+(`git+https://…`) < an **archive** download-then-install < a raw **shell pipeline** (`curl … | sh`).
 
 ## What to inspect (checklist — cite file:line for every hit)
 
@@ -53,6 +68,11 @@ target. You never execute its scripts. Reading only.
     before acting), sandbox detection (`/proc/self/cgroup`, VM artifacts), or a long `sleep`
     before a network/exec step. Benign code doesn't care whether it's in CI — gating is an intent
     signal: **+1 band (min 4); band 7 when it gates a network/exec payload to evade a sandbox.**
+11. **Referenced files** — anything the `SKILL.md` tells the agent to read (`references/*.md`,
+    `@import`, "see", "load", a relative path named in prose). Resolve **local** references only,
+    up to depth 3 / 40 files / 2 MB total — beyond that, stop and say so in the coverage line. An
+    external URL is marked `not checked`, never fetched. A referenced file that can't be found is
+    itself a visible finding (band 3, "unresolved reference") — never a silent skip.
 
 ## Output format (exactly this)
 
@@ -67,6 +87,7 @@ EVIDENCE
 
 CAPABILITY SURFACE: network=<y/n> shell=<y/n> sensitive-fs=<y/n> persistence=<y/n> remote-code=<y/n> obfuscation=<y/n> evasion=<y/n>
 DESCRIPTION-HONEST: <yes / no — what it hides>
+COVERAGE: <N>/<M> locally referenced files audited (missing: <list, or "none">; external URLs not fetched)
 RECOMMENDATION: <safe to install / install with caveat X / do not install — reason>
 ```
 
